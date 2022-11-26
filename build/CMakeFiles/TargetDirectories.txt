@@ -1,3 +1,0 @@
-/mnt/d/WSL/TEST/build/CMakeFiles/rebuild_cache.dir
-/mnt/d/WSL/TEST/build/CMakeFiles/edit_cache.dir
-/mnt/d/WSL/TEST/build/CMakeFiles/testfa.dir

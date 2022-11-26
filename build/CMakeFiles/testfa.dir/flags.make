@@ -6,5 +6,5 @@ CXX_FLAGS =   -Wall -Wextra -pedantic -g -O2 -std=c++17
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/mnt/d/WSL/TEST/googletest/googletest/include -I/mnt/d/WSL/TEST/googletest/googletest 
+CXX_INCLUDES = -I/mnt/d/WSL/Automaton/googletest/googletest/include -I/mnt/d/WSL/Automaton/googletest/googletest 
 

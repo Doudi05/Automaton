@@ -9,7 +9,18 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   bool Automaton::isValid() const {
-    return !this->allStates.empty() && !this->alphabets.empty();
+    return (countSymbols() != 0 && countStates() != 0);
+
+
+    // return !this->allStates.empty() && !this->alphabets.empty();
+
+    
+    // if (this->alphabets.empty() || this->allStates.empty())
+    // {
+    //   return false;
+    // }
+    // return true;
+
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +53,7 @@ namespace fa {
   bool Automaton::removeSymbol(char symbol) {
     if (hasSymbol(symbol))
     {
+      //Revoir code manquant : removeTransition
       this->alphabets.erase(symbol);
       return true;
     }
@@ -61,27 +73,18 @@ namespace fa {
     {
       return false;
     }
-    states newState{false, false, state};
-    std::pair<std::map<int, states>::iterator, bool> ret;
-    ret = this->allStates.insert(std::pair<int, states>(state, newState));
-    return ret.second;
 
-    // if (state < 0)
-    // {
-    //   return false;
-    // }
+    if (this->allStates.find(state) == this->allStates.end())
+    {
+      struct states *newState = new struct states;
+      newState->initial = 0;
+      newState->final = 0;
+      newState->both = 0;
+      this->allStates.insert(pair<int, struct states *>(state, newState));
+      return true;
+    }
 
-    // if (this->allStates.find(state) == this->allStates.end())
-    // {
-    //   struct states *newState = new struct states;
-    //   newState->initial = 0;
-    //   newState->final = 0;
-    //   newState->both = 0;
-    //   this->allStates.insert(pair<int, struct states *>(state, newState));
-    //   return true;
-    // }
-
-    // return false;
+    return false;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,8 +104,8 @@ namespace fa {
         }
       }
       this->allStates.erase(state);
-      // this->initialState.erase(state);
-      // this->finalState.erase(state);
+      this->initialState.erase(state);
+      this->finalState.erase(state);
       return true;
     }
     return false;
@@ -111,6 +114,7 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   bool Automaton::hasState(int state) const{
+    //return allStates.count(state)==1;
     if(state < 0){
       return false;
     }
@@ -131,70 +135,32 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   void Automaton::setStateInitial (int state){
-    if (hasState(state))
-    {
-      auto it = this->allStates.find(state);
-      if (it != this->allStates.end())
-      {
-        it->second.initial = true;
-      }
-    }
-
-    // assert(hasState(state));
-    // allStates[state]->initial = 1;
-    // initialState[state] = allStates[state];
+    assert(hasState(state));
+    allStates[state]->initial = 1;
+    initialState[state] = allStates[state];
       
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   bool Automaton::isStateInitial (int state) const{
-    if (hasState(state))
-    {
-      auto it = this->allStates.find(state);
-      if (it != this->allStates.end())
-      {
-        return it->second.initial == true;
-      }
-    }
-    return false;
-
-    // assert(hasState(state));
-    // return allStates.at(state)->initial;
+    assert(hasState(state));
+    return allStates.at(state)->initial;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   void Automaton::setStateFinal (int state){
-    if (hasState(state))
-    {
-      auto it = this->allStates.find(state);
-      if (it != this->allStates.end())
-      {
-        it->second.final = true;
-      }
-    }
-
-    // assert(hasState(state));
-    // allStates[state]->final = 1;
-    // finalState[state] = allStates[state];
+    assert(hasState(state));
+    allStates[state]->final = 1;
+    finalState[state] = allStates[state];
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   bool Automaton::isStateFinal (int state) const{
-    if (hasState(state))
-    {
-      auto it = this->allStates.find(state);
-      if (it != this->allStates.end())
-      {
-        return it->second.final == true;
-      }
-    }
-    return false;
-
-    // assert(hasState(state));
-    // return allStates.at(state)->final;
+    assert(hasState(state));
+    return allStates.at(state)->final;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +182,13 @@ namespace fa {
       transitions newTransition{from,to,alpha};
       this->fleches.push_back(newTransition);
       return true;
+      // addSymbol(alpha);
+      // struct transitions newTransition;
+      // newTransition.dep = from;
+      // newTransition.arr = to;
+      // newTransition.letter = alpha;
+      // this->fleches.push_back(newTransition);
+      // return true;
     }
     return false;
   }
@@ -233,6 +206,15 @@ namespace fa {
       }
     }
     return false;
+    //2ème implementation possible à voir
+    // for (int i = 0; i < transitions.size(); i++)
+    // {
+    //   if (transitions[i].dep == from && transitions[i].arr == to && transitions[i].letter == alpha)
+    //   {
+    //     transitions.erase(transitions.begin() + i);
+    //     return true;
+    //   }
+    // }
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,6 +240,14 @@ namespace fa {
       }
     }
     return false;
+    //2ème implementation possible à voir
+    // for (int i = 0; i < transitions.size(); i++)
+    // {
+    //   if (transitions[i].dep == from && transitions[i].arr == to && transitions[i].letter == alpha)
+    //   {
+    //     return true;
+    //   }
+    // }
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,22 +255,24 @@ namespace fa {
   std::size_t Automaton::countTransitions() const{
     return this->fleches.size();
   }
+
+  
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   void Automaton::prettyPrint (std::ostream& os) const{
     os << "Initial states: \n\t";
-    for (auto it = this->allStates.begin(); it != this->allStates.end(); it++)
+    for (auto it = this->initialState.begin(); it != this->initialState.end(); it++)
     {
-      if (it->second.initial)
+      if (it->second->initial)
       {
         os << it->first << " ";
       }
     }
     os << "\nFinal states: \n\t";
-    for (auto it = this->allStates.begin(); it != this->allStates.end(); it++)
+    for (auto it = this->finalState.begin(); it != this->finalState.end(); it++)
     {
-      if (it->second.final)
+      if (it->second->final)
       {
         os << it->first << " ";
       }
@@ -430,6 +422,63 @@ namespace fa {
 
     return automate;
   }
+
+  // Automaton Automaton::createComplete(const Automaton& automaton){
+  //   Automaton result = Automaton();
+  //   //copy the alphabet
+  //   for (auto it = automaton.alphabets.begin(); it != automaton.alphabets.end(); it++)
+  //   {
+  //     result.addSymbol(*it);
+  //   }
+
+  //   //copy the states
+  //   for (auto it = automaton.allStates.begin(); it != automaton.allStates.end(); it++)
+  //   {
+  //     result.addState(it->first);
+  //     if (automaton.isStateInitial(it->first))
+  //     {
+  //       result.setStateInitial(it->first);
+  //     }
+  //     if (automaton.isStateFinal(it->first))
+  //     {
+  //       result.setStateFinal(it->first);
+  //     }
+  //   }
+
+  //   //copy the transitions
+  //   for (auto it = automaton.fleches.begin(); it != automaton.fleches.end(); it++)
+  //   {
+  //     for (auto it2 = automaton.alphabets.begin(); it2 != automaton.alphabets.end(); it2++)
+  //     {
+  //       if (it->letter == *it2)
+  //       {
+  //         result.addTransition(it->dep, it->letter, it->arr);
+  //       }
+  //     }
+  //   }
+
+  //   if (!automaton.isComplete()){
+  //     int puit = 0;
+  //     while (automaton.hasState(puit))
+  //     {
+  //       puit++;
+  //     }
+  //     result.addState(puit);
+
+  //     for (auto it = automaton.alphabets.begin(); it != automaton.alphabets.end(); it++)
+  //     {
+  //       result.addTransition(puit, *it, puit);
+  //       for (auto it2 = automaton.fleches.begin(); it2 != automaton.fleches.end(); it2++)
+  //       {
+  //         if (it2->letter == *it)
+  //         {
+  //           result.addTransition(it2->dep, *it, puit);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -437,6 +486,7 @@ namespace fa {
     assert(automaton.isValid());
     Automaton complement  = automaton;
 
+    // complement = automaton.createDeterministic(automaton);
     complement = automaton.createComplete(automaton);
     
     for (auto it = complement.allStates.begin(); it != complement.allStates.end(); it++)
@@ -529,7 +579,7 @@ namespace fa {
     if (Einitial.empty())
     {
       vector <struct transitions> empty_transitions;
-      map <int, states> empty_states;
+      map <int, struct states *> empty_states;
       this->fleches = empty_transitions;
       this->allStates = empty_states;
       addState(0);
@@ -585,7 +635,7 @@ namespace fa {
     if (Efinal.empty())
     {
       vector <struct transitions> empty_transitions;
-      map <int, states> empty_states;
+      map <int, struct states *> empty_states;
       this->fleches = empty_transitions;
       this->allStates = empty_states;
       addState(0);
@@ -715,7 +765,7 @@ namespace fa {
     {
       if (product.countSymbols() == 0)
       {
-        product.addSymbol('a');
+        product.addSymbol('z');
       }
       if (product.countStates() == 0)
       {
@@ -739,43 +789,7 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// std::set<int> Automaton::readString(const std::string& word) const{
-//   // return nothing
-//   return std::set<int>();
-// }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bool Automaton::match(const std::string& word) const{
-//   return false;
-// }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bool Automaton::isIncludedIn(const Automaton& other) const{
-//   return false;
-// }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Automaton Automaton::createDeterministic(const Automaton& other){
-//   return Automaton();
-// }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Automaton Automaton::createMinimalMoore(const Automaton& other){
-//   return Automaton();
-// }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Automaton Automaton::createMinimalBrzozowski(const Automaton& other){
-//   return Automaton();
-// }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*FONCTIONS PRIVEES*/
 bool Automaton::depthFirstSearch(int state, std::set<int> &visited) const{
     if(isStateFinal(state)){
@@ -794,9 +808,9 @@ bool Automaton::depthFirstSearch(int state, std::set<int> &visited) const{
 
   void Automaton::unsetStateFinal(int state){
     if(hasState(state)){
-      auto it = allStates.find(state);
-      if(it != allStates.end()){
-        it->second.final = false;
+      auto it = finalState.find(state);
+      if(it != finalState.end()){
+        it->second->final = 0;
       }
     }
   }

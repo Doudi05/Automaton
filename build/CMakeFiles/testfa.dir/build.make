@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/WSL/TEST
+CMAKE_SOURCE_DIR = /mnt/d/WSL/Automaton
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/WSL/TEST/build
+CMAKE_BINARY_DIR = /mnt/d/WSL/Automaton/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/testfa.dir/depend.make
@@ -59,42 +59,42 @@ include CMakeFiles/testfa.dir/flags.make
 
 CMakeFiles/testfa.dir/Automaton.cc.o: CMakeFiles/testfa.dir/flags.make
 CMakeFiles/testfa.dir/Automaton.cc.o: ../Automaton.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/d/WSL/TEST/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/testfa.dir/Automaton.cc.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testfa.dir/Automaton.cc.o -c /mnt/d/WSL/TEST/Automaton.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/d/WSL/Automaton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/testfa.dir/Automaton.cc.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testfa.dir/Automaton.cc.o -c /mnt/d/WSL/Automaton/Automaton.cc
 
 CMakeFiles/testfa.dir/Automaton.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/testfa.dir/Automaton.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/WSL/TEST/Automaton.cc > CMakeFiles/testfa.dir/Automaton.cc.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/WSL/Automaton/Automaton.cc > CMakeFiles/testfa.dir/Automaton.cc.i
 
 CMakeFiles/testfa.dir/Automaton.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/testfa.dir/Automaton.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/WSL/TEST/Automaton.cc -o CMakeFiles/testfa.dir/Automaton.cc.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/WSL/Automaton/Automaton.cc -o CMakeFiles/testfa.dir/Automaton.cc.s
 
 CMakeFiles/testfa.dir/testfa.cc.o: CMakeFiles/testfa.dir/flags.make
 CMakeFiles/testfa.dir/testfa.cc.o: ../testfa.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/d/WSL/TEST/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/testfa.dir/testfa.cc.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testfa.dir/testfa.cc.o -c /mnt/d/WSL/TEST/testfa.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/d/WSL/Automaton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/testfa.dir/testfa.cc.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testfa.dir/testfa.cc.o -c /mnt/d/WSL/Automaton/testfa.cc
 
 CMakeFiles/testfa.dir/testfa.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/testfa.dir/testfa.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/WSL/TEST/testfa.cc > CMakeFiles/testfa.dir/testfa.cc.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/WSL/Automaton/testfa.cc > CMakeFiles/testfa.dir/testfa.cc.i
 
 CMakeFiles/testfa.dir/testfa.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/testfa.dir/testfa.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/WSL/TEST/testfa.cc -o CMakeFiles/testfa.dir/testfa.cc.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/WSL/Automaton/testfa.cc -o CMakeFiles/testfa.dir/testfa.cc.s
 
 CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o: CMakeFiles/testfa.dir/flags.make
 CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o: ../googletest/googletest/src/gtest-all.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/d/WSL/TEST/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o -c /mnt/d/WSL/TEST/googletest/googletest/src/gtest-all.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/d/WSL/Automaton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o -c /mnt/d/WSL/Automaton/googletest/googletest/src/gtest-all.cc
 
 CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/WSL/TEST/googletest/googletest/src/gtest-all.cc > CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/WSL/Automaton/googletest/googletest/src/gtest-all.cc > CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.i
 
 CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/WSL/TEST/googletest/googletest/src/gtest-all.cc -o CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/WSL/Automaton/googletest/googletest/src/gtest-all.cc -o CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.s
 
 # Object files for target testfa
 testfa_OBJECTS = \
@@ -110,7 +110,7 @@ testfa: CMakeFiles/testfa.dir/testfa.cc.o
 testfa: CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o
 testfa: CMakeFiles/testfa.dir/build.make
 testfa: CMakeFiles/testfa.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/d/WSL/TEST/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable testfa"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/d/WSL/Automaton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable testfa"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/testfa.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -123,6 +123,6 @@ CMakeFiles/testfa.dir/clean:
 .PHONY : CMakeFiles/testfa.dir/clean
 
 CMakeFiles/testfa.dir/depend:
-	cd /mnt/d/WSL/TEST/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/WSL/TEST /mnt/d/WSL/TEST /mnt/d/WSL/TEST/build /mnt/d/WSL/TEST/build /mnt/d/WSL/TEST/build/CMakeFiles/testfa.dir/DependInfo.cmake --color=$(COLOR)
+	cd /mnt/d/WSL/Automaton/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/WSL/Automaton /mnt/d/WSL/Automaton /mnt/d/WSL/Automaton/build /mnt/d/WSL/Automaton/build /mnt/d/WSL/Automaton/build/CMakeFiles/testfa.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/testfa.dir/depend
 

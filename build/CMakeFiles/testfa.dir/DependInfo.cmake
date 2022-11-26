@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/mnt/d/WSL/TEST/Automaton.cc" "/mnt/d/WSL/TEST/build/CMakeFiles/testfa.dir/Automaton.cc.o"
-  "/mnt/d/WSL/TEST/googletest/googletest/src/gtest-all.cc" "/mnt/d/WSL/TEST/build/CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o"
-  "/mnt/d/WSL/TEST/testfa.cc" "/mnt/d/WSL/TEST/build/CMakeFiles/testfa.dir/testfa.cc.o"
+  "/mnt/d/WSL/Automaton/Automaton.cc" "/mnt/d/WSL/Automaton/build/CMakeFiles/testfa.dir/Automaton.cc.o"
+  "/mnt/d/WSL/Automaton/googletest/googletest/src/gtest-all.cc" "/mnt/d/WSL/Automaton/build/CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o"
+  "/mnt/d/WSL/Automaton/testfa.cc" "/mnt/d/WSL/Automaton/build/CMakeFiles/testfa.dir/testfa.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

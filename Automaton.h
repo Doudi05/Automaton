@@ -249,7 +249,9 @@ namespace fa {
   private:
     set <char> alphabets;
     
-    map <int, states> allStates;
+    map <int, struct states *> initialState;
+    map <int, struct states *> finalState;
+    map <int, struct states *> allStates;
 
     vector <struct transitions> fleches;
     

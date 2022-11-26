@@ -264,6 +264,23 @@ TEST(AutomatonCountState, CountState3) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(AutomatonIsStateInitial, setStateInitial) {
+  fa::Automaton fa;
+  fa.addState(1);
+  EXPECT_EQ(fa.countStates(), 1u);
+  EXPECT_FALSE(fa.isStateInitial(1));
+  EXPECT_DEATH(fa.isStateInitial(2),"");
+  EXPECT_DEATH(fa.setStateInitial(2), "");
+  EXPECT_EQ(fa.countStates(), 1u);
+  EXPECT_FALSE(fa.isStateInitial(1));
+  EXPECT_DEATH(fa.isStateInitial(2),"");
+  fa.setStateInitial(1);
+  EXPECT_TRUE(fa.isStateInitial(1));
+  fa.setStateInitial(1);
+  EXPECT_TRUE(fa.isStateInitial(1));
+  EXPECT_EQ(fa.countStates(), 1u);
+}
+
 TEST(AutomatonIsStateInitial, IsStateInitialYes) {
   fa::Automaton fa;
   fa.addState(1);
@@ -279,6 +296,23 @@ TEST(AutomatonIsStateInitial, IsStateInitialNot) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(AutomatonIsStateFinal, setStateFinal) {
+  fa::Automaton fa;
+  fa.addState(1);
+  EXPECT_EQ(fa.countStates(), 1u);
+  EXPECT_FALSE(fa.isStateFinal(1));
+  EXPECT_DEATH(fa.isStateFinal(2), "");
+  EXPECT_DEATH(fa.setStateFinal(2), "");
+  EXPECT_EQ(fa.countStates(), 1u);
+  EXPECT_FALSE(fa.isStateFinal(1));
+  EXPECT_DEATH(fa.isStateFinal(2), "");
+  fa.setStateFinal(1);
+  EXPECT_TRUE(fa.isStateFinal(1));
+  fa.setStateFinal(1);
+  EXPECT_TRUE(fa.isStateFinal(1));
+  EXPECT_EQ(fa.countStates(), 1u);
+}
+
 TEST(AutomatonIsStateFinal, IsStateFinalNo) {
   fa::Automaton fa;
   fa.addState(1);
@@ -629,10 +663,31 @@ TEST(AutomatonCreateComplete, CreateCompleteAlreadyCompleted) {
   EXPECT_TRUE(fa.isComplete());
   EXPECT_EQ(fa.countStates(),2u);
 
+  // EXPECT_FALSE(fa.match(""));
+  // EXPECT_FALSE(fa.match("a"));
+  // EXPECT_FALSE(fa.match("aa"));
+  // EXPECT_FALSE(fa.match("aba"));
+  // EXPECT_FALSE(fa.match("cc"));
+  // EXPECT_TRUE(fa.match("ab"));
+  // EXPECT_TRUE(fa.match("aaaaaaaabbbbbbbbbbbb"));
+  // EXPECT_TRUE(fa.match("c"));
+  // EXPECT_TRUE(fa.match("ccc"));
+
   fa::Automaton complete = fa.createComplete(fa);
   EXPECT_TRUE(complete.isComplete());
   EXPECT_TRUE(complete.isValid());
   EXPECT_EQ(complete.countStates(),2u);
+
+
+  // EXPECT_FALSE(fa.match(""));
+  // EXPECT_FALSE(complete.match("a"));
+  // EXPECT_FALSE(complete.match("aa"));
+  // EXPECT_FALSE(complete.match("aba"));
+  // EXPECT_FALSE(complete.match("cc"));
+  // EXPECT_TRUE(complete.match("ab"));
+  // EXPECT_TRUE(complete.match("aaaaaaaabbbbbbbbbbbb"));
+  // EXPECT_TRUE(complete.match("c"));
+  // EXPECT_TRUE(complete.match("ccc"));
 }
 
 TEST(AutomatonCreateComplete, NotCreatingNewStateForBin) {
@@ -641,13 +696,24 @@ TEST(AutomatonCreateComplete, NotCreatingNewStateForBin) {
   fa.addSymbol('b');
   fa.addState(1);
 
+  // EXPECT_FALSE(fa.match("a"));
+  // EXPECT_FALSE(fa.match("b"));
+  // EXPECT_FALSE(fa.match("aa"));
+  // EXPECT_FALSE(fa.match(""));
+  // EXPECT_EQ(fa.countStates(),1u);
+
   fa::Automaton complete = fa.createComplete(fa);
   EXPECT_TRUE(complete.isComplete());
   EXPECT_TRUE(complete.isValid());
   EXPECT_EQ(complete.countStates(),1u);
+
+  // EXPECT_FALSE(complete.match("a"));
+  // EXPECT_FALSE(complete.match("b"));
+  // EXPECT_FALSE(complete.match("aa"));
+  // EXPECT_FALSE(complete.match(""));
 }
 
-// Tests fail. See why
+/*Tests fail. See why*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -672,13 +738,37 @@ TEST(AutomatonCreateComplement, AlreadyCompleteAndDeterministic) {
   EXPECT_TRUE(fa.isDeterministic());
   EXPECT_TRUE(fa.isComplete());
 
+  // EXPECT_FALSE(fa.match("a"));
+  // EXPECT_FALSE(fa.match("cc"));
+  // EXPECT_FALSE(fa.match(""));
+  // EXPECT_FALSE(fa.match("aa"));
+  // EXPECT_TRUE(fa.match("b"));
+  // EXPECT_TRUE(fa.match("c"));
+  // EXPECT_TRUE(fa.match("ac"));
+  // EXPECT_TRUE(fa.match("abbb"));
+  // EXPECT_TRUE(fa.match("accccccc"));
+  // EXPECT_TRUE(fa.match("acacaccc"));
+  // EXPECT_TRUE(fa.match("acabbbbcac"));
+
   fa::Automaton complement = fa.createComplement(fa);
   EXPECT_TRUE(complement.isValid());
   EXPECT_TRUE(complement.isDeterministic());
   EXPECT_TRUE(complement.isComplete());
+
+  // EXPECT_TRUE(complement.match("a"));
+  // EXPECT_TRUE(complement.match("cc"));
+  // EXPECT_TRUE(complement.match(""));
+  // EXPECT_TRUE(complement.match("aa"));
+  // EXPECT_FALSE(complement.match("b"));
+  // EXPECT_FALSE(complement.match("c"));
+  // EXPECT_FALSE(complement.match("ac"));
+  // EXPECT_FALSE(complement.match("abbb"));
+  // EXPECT_FALSE(complement.match("accccccc"));
+  // EXPECT_FALSE(complement.match("acacaccc"));
+  // EXPECT_FALSE(complement.match("acabbbbcac"));
 }
 
-// Tests fail. See why
+/*Tests fail. See why*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -702,8 +792,32 @@ TEST(AutomatonCreateMirror, CreateMirrorAndIsCompleted) {
   
   EXPECT_TRUE(fa.isComplete());
 
+  // EXPECT_FALSE(fa.match("a"));
+  // EXPECT_FALSE(fa.match("cc"));
+  // EXPECT_FALSE(fa.match(""));
+  // EXPECT_FALSE(fa.match("aa"));
+  // EXPECT_TRUE(fa.match("b"));
+  // EXPECT_TRUE(fa.match("c"));
+  // EXPECT_TRUE(fa.match("ac"));
+  // EXPECT_TRUE(fa.match("abbb"));
+  // EXPECT_TRUE(fa.match("accccccc"));
+  // EXPECT_TRUE(fa.match("acacaccc"));
+  // EXPECT_TRUE(fa.match("acabbbbcac"));
+
   fa::Automaton mirror = fa.createMirror(fa);
   EXPECT_TRUE(mirror.isValid());
+
+  // EXPECT_FALSE(mirror.match("a"));
+  // EXPECT_FALSE(mirror.match("cc"));
+  // EXPECT_FALSE(mirror.match(""));
+  // EXPECT_FALSE(mirror.match("aa"));
+  // EXPECT_TRUE(mirror.match("b"));
+  // EXPECT_TRUE(mirror.match("c"));
+  // EXPECT_TRUE(mirror.match("ca"));
+  // EXPECT_TRUE(mirror.match("bbba"));
+  // EXPECT_TRUE(mirror.match("ccccccca"));
+  // EXPECT_TRUE(mirror.match("cccacaca"));
+  // EXPECT_TRUE(mirror.match("cacbbbbaca"));
 }
 
 TEST(AutomatonCreateMirror, CreateMirrorNotCompleted) {
@@ -723,8 +837,32 @@ TEST(AutomatonCreateMirror, CreateMirrorNotCompleted) {
 
   EXPECT_FALSE(fa.isComplete());
 
+  // EXPECT_FALSE(fa.match("b"));
+  // EXPECT_FALSE(fa.match("c"));
+  // EXPECT_FALSE(fa.match(""));
+  // EXPECT_FALSE(fa.match("aa"));
+  // EXPECT_TRUE(fa.match("a"));
+  // EXPECT_TRUE(fa.match("abc"));
+  // EXPECT_TRUE(fa.match("ac"));
+  // EXPECT_TRUE(fa.match("abbb"));
+  // EXPECT_TRUE(fa.match("accccccc"));
+  // EXPECT_TRUE(fa.match("acacaccc"));
+  // EXPECT_TRUE(fa.match("acabbbbcac"));
+
   fa::Automaton mirror = fa.createMirror(fa);
   EXPECT_TRUE(mirror.isValid());
+
+  // EXPECT_FALSE(mirror.match("b"));
+  // EXPECT_FALSE(mirror.match("c"));
+  // EXPECT_FALSE(mirror.match(""));
+  // EXPECT_FALSE(mirror.match("aa"));
+  // EXPECT_TRUE(mirror.match("a"));
+  // EXPECT_TRUE(mirror.match("cba"));
+  // EXPECT_TRUE(mirror.match("ca"));
+  // EXPECT_TRUE(mirror.match("bbba"));
+  // EXPECT_TRUE(mirror.match("ccccccca"));
+  // EXPECT_TRUE(mirror.match("cccacaca"));
+  // EXPECT_TRUE(mirror.match("cacbbbbaca"));
 }
 
 TEST(AutomatonCreateMirror, CreateMirrorInitialsAreFinalsTo) {
@@ -745,8 +883,32 @@ TEST(AutomatonCreateMirror, CreateMirrorInitialsAreFinalsTo) {
 
   EXPECT_FALSE(fa.isComplete());
 
+  // EXPECT_FALSE(fa.match("b"));
+  // EXPECT_FALSE(fa.match("c"));
+  // EXPECT_FALSE(fa.match("aa"));
+  // EXPECT_TRUE(fa.match(""));
+  // EXPECT_TRUE(fa.match("a"));
+  // EXPECT_TRUE(fa.match("abc"));
+  // EXPECT_TRUE(fa.match("ac"));
+  // EXPECT_TRUE(fa.match("abbb"));
+  // EXPECT_TRUE(fa.match("accccccc"));
+  // EXPECT_TRUE(fa.match("acacaccc"));
+  // EXPECT_TRUE(fa.match("acabbbbcac"));
+
   fa::Automaton mirror = fa.createMirror(fa);
   EXPECT_TRUE(mirror.isValid());
+
+  // EXPECT_FALSE(mirror.match("b"));
+  // EXPECT_FALSE(mirror.match("c"));
+  // EXPECT_FALSE(mirror.match("aa"));
+  // EXPECT_TRUE(mirror.match(""));
+  // EXPECT_TRUE(mirror.match("a"));
+  // EXPECT_TRUE(mirror.match("cba"));
+  // EXPECT_TRUE(mirror.match("ca"));
+  // EXPECT_TRUE(mirror.match("bbba"));
+  // EXPECT_TRUE(mirror.match("ccccccca"));
+  // EXPECT_TRUE(mirror.match("cccacaca"));
+  // EXPECT_TRUE(mirror.match("cacbbbbaca"));
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -889,7 +1051,7 @@ TEST(AutomatonIsLanguageEmpty, IsLanguageEmptyWord) {
   EXPECT_FALSE(fa.isLanguageEmpty());
 }
 
-// Decomment when product is done
+/*Decomment when product is done*/
 TEST(AutomatonIsLanguageEmpty, NonDeterministicTest) {
   fa::Automaton lhs;
   lhs.addSymbol('a');
@@ -1215,6 +1377,14 @@ TEST(AutomatonCreateProduct, NonDeterministicAndSamesAutomatons) {
   EXPECT_EQ(5u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_FALSE(product.isLanguageEmpty());
+
+  // EXPECT_TRUE(product.match("b"));
+  // EXPECT_TRUE(product.match("a"));
+  // EXPECT_FALSE(product.match(""));
+  // EXPECT_FALSE(product.match("ba"));
+  // EXPECT_FALSE(product.match("ab"));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
 }
 
 TEST(AutomatonCreateProduct, NonDeterministicAndSameAutomata) {
@@ -1235,6 +1405,14 @@ TEST(AutomatonCreateProduct, NonDeterministicAndSameAutomata) {
   EXPECT_EQ(5u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_FALSE(product.isLanguageEmpty());
+
+  // EXPECT_TRUE(product.match("b"));
+  // EXPECT_TRUE(product.match("a"));
+  // EXPECT_FALSE(product.match(""));
+  // EXPECT_FALSE(product.match("ba"));
+  // EXPECT_FALSE(product.match("ab"));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
 }
 
 TEST(AutomatonCreateProduct, EmptyProduct) {
@@ -1249,6 +1427,7 @@ TEST(AutomatonCreateProduct, EmptyProduct) {
   lhs.addTransition(1,'a',3);
   lhs.addTransition(1,'a',2);
   lhs.addTransition(1,'b',3);
+  // EXPECT_FALSE(lhs.match(""));
 
 
   fa::Automaton rhs;
@@ -1262,6 +1441,7 @@ TEST(AutomatonCreateProduct, EmptyProduct) {
   rhs.addTransition(1,'c',3);
   rhs.addTransition(1,'d',2);
   rhs.addTransition(1,'d',3);
+  // EXPECT_FALSE(rhs.match(""));
 
 
   fa::Automaton product = product.createProduct(lhs,rhs);
@@ -1269,6 +1449,16 @@ TEST(AutomatonCreateProduct, EmptyProduct) {
   EXPECT_EQ(0u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_TRUE(product.isLanguageEmpty());
+
+  // EXPECT_FALSE(product.match("d"));
+  // EXPECT_FALSE(product.match("c"));
+  // EXPECT_FALSE(product.match("b"));
+  // EXPECT_FALSE(product.match("a"));
+  // EXPECT_FALSE(product.match(""));
+  // EXPECT_FALSE(product.match("ba"));
+  // EXPECT_FALSE(product.match("ab"));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
 }
 
 TEST(AutomatonCreateProduct, EmptyProductbutMatchEmptyWord) {
@@ -1284,6 +1474,7 @@ TEST(AutomatonCreateProduct, EmptyProductbutMatchEmptyWord) {
   lhs.addTransition(1,'a',3);
   lhs.addTransition(1,'a',2);
   lhs.addTransition(1,'b',3);
+  // EXPECT_TRUE(lhs.match(""));
 
 
   fa::Automaton rhs;
@@ -1298,6 +1489,7 @@ TEST(AutomatonCreateProduct, EmptyProductbutMatchEmptyWord) {
   rhs.addTransition(1,'c',3);
   rhs.addTransition(1,'d',2);
   rhs.addTransition(1,'d',3);
+  // EXPECT_TRUE(rhs.match(""));
 
 
   fa::Automaton product = product.createProduct(lhs,rhs);
@@ -1305,6 +1497,16 @@ TEST(AutomatonCreateProduct, EmptyProductbutMatchEmptyWord) {
   EXPECT_EQ(0u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_FALSE(product.isLanguageEmpty());
+
+  // EXPECT_FALSE(product.match("d"));
+  // EXPECT_FALSE(product.match("c"));
+  // EXPECT_FALSE(product.match("b"));
+  // EXPECT_FALSE(product.match("a"));
+  // EXPECT_TRUE(product.match(""));
+  // EXPECT_FALSE(product.match("ba"));
+  // EXPECT_FALSE(product.match("ab"));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
 }
 
 TEST(AutomatonCreateProduct, InitialsAreFinalsToo) {
@@ -1339,6 +1541,14 @@ TEST(AutomatonCreateProduct, InitialsAreFinalsToo) {
   EXPECT_EQ(5u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_FALSE(product.isLanguageEmpty());
+
+  // EXPECT_TRUE(product.match("b"));
+  // EXPECT_TRUE(product.match("a"));
+  // EXPECT_TRUE(product.match(""));
+  // EXPECT_FALSE(product.match("ba"));
+  // EXPECT_FALSE(product.match("ab"));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
 }
 
 TEST(AutomatonCreateProduct, BasicExemple) {
@@ -1373,6 +1583,14 @@ TEST(AutomatonCreateProduct, BasicExemple) {
   EXPECT_EQ(2u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_FALSE(product.isLanguageEmpty());
+
+  // EXPECT_TRUE(product.match("b"));
+  // EXPECT_FALSE(product.match("a"));
+  // EXPECT_TRUE(product.match(""));
+  // EXPECT_FALSE(product.match("ba"));
+  // EXPECT_FALSE(product.match("ab"));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
 }
 
 TEST(AutomatonCreateProduct, BasicExempleBis) {
@@ -1407,6 +1625,14 @@ TEST(AutomatonCreateProduct, BasicExempleBis) {
   EXPECT_EQ(4u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_FALSE(product.isLanguageEmpty());
+
+  // EXPECT_FALSE(product.match("b"));
+  // EXPECT_FALSE(product.match("a"));
+  // EXPECT_FALSE(product.match(""));
+  // EXPECT_TRUE(product.match("ba"));
+  // EXPECT_FALSE(product.match("ab"));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
 }
 
 TEST(AutomatonCreateProduct, LoopOnExistingState) {
@@ -1443,6 +1669,17 @@ TEST(AutomatonCreateProduct, LoopOnExistingState) {
   EXPECT_EQ(3u,product.countTransitions());
   EXPECT_TRUE(product.isValid());
   EXPECT_FALSE(product.isLanguageEmpty());
+
+  // EXPECT_FALSE(product.match("b"));
+  // EXPECT_FALSE(product.match("a"));
+  // EXPECT_FALSE(product.match(""));
+  // EXPECT_FALSE(product.match("aa"));
+  // EXPECT_FALSE(product.match("bb"));
+  // EXPECT_FALSE(product.match("ba"));
+  // EXPECT_FALSE(product.match("aab"));
+  // EXPECT_FALSE(product.match("abb"));
+  // EXPECT_TRUE(product.match("bab"));
+  // EXPECT_TRUE(product.match("ab"));
 }
 
 TEST(AutomatonCreateProduct, LHSLanguageIsEmpty) {
@@ -1770,75 +2007,49 @@ TEST(HasEmptyIntersectionWith, RHSLanguageIsEmpty) {
 
 
 
+
+
+/*
+
+
+
+
+*/
+
+
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
 
-  fa::Automaton vv;
-  vv.addSymbol('a');
-  vv.addSymbol('b');
-  vv.addSymbol('c');
-
-  vv.addState(1);
-  vv.addState(2);
-  vv.addState(3);
-  vv.addState(4);
-  vv.addState(5);
-  vv.addState(6);
-  vv.addState(7);
-  vv.setStateInitial(1);
-  vv.setStateFinal(1);
-  vv.setStateFinal(4);
-  vv.setStateFinal(7);
-  vv.addTransition(1,'a',2);
-  vv.addTransition(1,'b',3);
-  vv.addTransition(1,'b',5);
-  vv.addTransition(1,'c',6);
-  vv.addTransition(2,'b',4);
-  vv.addTransition(3,'c',4);
-  vv.addTransition(4,'a',2);
-  vv.addTransition(4,'b',3);
-  vv.addTransition(4,'b',5);
-  vv.addTransition(4,'c',6);
-  vv.addTransition(5,'b',7);
-  vv.addTransition(6,'a',7);
-  vv.addTransition(7,'b',5);
-  vv.addTransition(7,'c',6);
-
-  EXPECT_TRUE(vv.isValid());
-  vv.prettyPrint(std::cout);
-  cout<<"\n\n";
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  fa::Automaton fa;
-  cout<<"On prend un automate vide\n\n";
-  cout<<"On ajoute les etats 0,1 et 2";
-  fa.addState(0);
-  fa.addState(1);
-  fa.addState(2);
-  cout<<"\nOn ajoute les transitions (0,a,1) et (1,b,2) (1,b,1)";
-  fa.addTransition(0,'a',1);
-  fa.addTransition(1,'b',2);
-  fa.addTransition(1,'b',1);
-  cout<<"\nL'automate comporte "<<fa.countStates()<<" états";
-  cout<<"\nL'automate comporte "<<fa.countTransitions()<<" transitions";
-  cout<<"\nL'état 0 est-il initial? "<<fa.isStateInitial(0);
-  cout<<"\nL'état 0 est-il final? "<<fa.isStateFinal(1);
-  cout<<"\nOn rend l'état 0 initial et l'état 1 final ";
-  fa.setStateInitial(0);
-  fa.setStateFinal(1);
-  cout<<"\nL'état 0 est-il initial? "<<fa.isStateInitial(0);
-  cout<<"\nL'état 0 est-il final? "<<fa.isStateFinal(1);
-  cout<<"\nL'état 0 est-il dans l'automate? "<<fa.hasState(0);
-  cout<<"\nL'état 3 est-il dans l'automate? "<<fa.hasState(3);
-  cout<<"\nOn ajoute puis supprime l'état 3 ";
-  fa.addState(3);
-  fa.removeState(3);
-  cout<<"\nL'état 3 est-il dans l'automate? "<<fa.hasState(3);
-  cout<<"\nLa taille de l'alphabet est : "<<fa.countSymbols();
-  cout<<"\n\nOn affiche l'automate: \n";
-  fa.prettyPrint(std::cout);
-  cout<<"\n\n";
+  // fa::Automaton fa;
+  // cout<<"On prend un automate vide\n\n";
+  // cout<<"On ajoute les etats 0,1 et 2";
+  // fa.addState(0);
+  // fa.addState(1);
+  // fa.addState(2);
+  // cout<<"\nOn ajoute les transitions (0,a,1) et (1,b,2) (1,b,1)";
+  // fa.addTransition(0,'a',1);
+  // fa.addTransition(1,'b',2);
+  // fa.addTransition(1,'b',1);
+  // cout<<"\nL'automate comporte "<<fa.countStates()<<" états";
+  // cout<<"\nL'automate comporte "<<fa.countTransitions()<<" transitions";
+  // cout<<"\nL'état 0 est-il initial? "<<fa.isStateInitial(0);
+  // cout<<"\nL'état 0 est-il final? "<<fa.isStateFinal(1);
+  // cout<<"\nOn rend l'état 0 initial et l'état 1 final ";
+  // fa.setStateInitial(0);
+  // fa.setStateFinal(1);
+  // cout<<"\nL'état 0 est-il initial? "<<fa.isStateInitial(0);
+  // cout<<"\nL'état 0 est-il final? "<<fa.isStateFinal(1);
+  // cout<<"\nL'état 0 est-il dans l'automate? "<<fa.hasState(0);
+  // cout<<"\nL'état 3 est-il dans l'automate? "<<fa.hasState(3);
+  // cout<<"\nOn ajoute puis supprime l'état 3 ";
+  // fa.addState(3);
+  // fa.removeState(3);
+  // cout<<"\nL'état 3 est-il dans l'automate? "<<fa.hasState(3);
+  // cout<<"\nLa taille de l'alphabet est : "<<fa.countSymbols();
+  // cout<<"\n\nOn affiche l'automate: \n";
+  // fa.prettyPrint(std::cout);
+  // cout<<"\n\n";
 
   return RUN_ALL_TESTS();
 }

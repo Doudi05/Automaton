@@ -1,0 +1,161 @@
+-- The CXX compiler identification is GNU 10.2.1
+-- The C compiler identification is GNU 10.2.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/build
+Scanning dependencies of target testfa
+[ 25%] Building CXX object CMakeFiles/testfa.dir/Automaton.cc.o
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc: In member function ‘std::set<int> fa::Automaton::readString(const string&) const’:
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc:695:56: warning: unused parameter ‘word’ [-Wunused-parameter]
+  695 | std::set<int> Automaton::readString(const std::string& word) const{
+      |                                     ~~~~~~~~~~~~~~~~~~~^~~~
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc: In member function ‘bool fa::Automaton::match(const string&) const’:
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc:702:42: warning: unused parameter ‘word’ [-Wunused-parameter]
+  702 | bool Automaton::match(const std::string& word) const{
+      |                       ~~~~~~~~~~~~~~~~~~~^~~~
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc: In member function ‘bool fa::Automaton::isIncludedIn(const fa::Automaton&) const’:
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc:708:47: warning: unused parameter ‘other’ [-Wunused-parameter]
+  708 | bool Automaton::isIncludedIn(const Automaton& other) const{
+      |                              ~~~~~~~~~~~~~~~~~^~~~~
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc: In static member function ‘static fa::Automaton fa::Automaton::createDeterministic(const fa::Automaton&)’:
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc:714:59: warning: unused parameter ‘other’ [-Wunused-parameter]
+  714 | Automaton Automaton::createDeterministic(const Automaton& other){
+      |                                          ~~~~~~~~~~~~~~~~~^~~~~
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc: In static member function ‘static fa::Automaton fa::Automaton::createMinimalMoore(const fa::Automaton&)’:
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc:720:58: warning: unused parameter ‘other’ [-Wunused-parameter]
+  720 | Automaton Automaton::createMinimalMoore(const Automaton& other){
+      |                                         ~~~~~~~~~~~~~~~~~^~~~~
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc: In static member function ‘static fa::Automaton fa::Automaton::createMinimalBrzozowski(const fa::Automaton&)’:
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc:726:63: warning: unused parameter ‘other’ [-Wunused-parameter]
+  726 | Automaton Automaton::createMinimalBrzozowski(const Automaton& other){
+      |                                              ~~~~~~~~~~~~~~~~~^~~~~
+[ 50%] Building CXX object CMakeFiles/testfa.dir/testfa.cc.o
+[ 75%] Building CXX object CMakeFiles/testfa.dir/googletest/googletest/src/gtest-all.cc.o
+[100%] Linking CXX executable testfa
+[100%] Built target testfa
+==641927== Memcheck, a memory error detector
+==641927== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==641927== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==641927== Command: ./testfa
+==641927== 
+[==========] Running 154 tests from 29 test suites.
+[----------] Global test environment set-up.
+[----------] 6 tests from AutomatonIsValidTest
+[ RUN      ] AutomatonIsValidTest.Default
+[       OK ] AutomatonIsValidTest.Default (3 ms)
+[ RUN      ] AutomatonIsValidTest.NoState1
+[       OK ] AutomatonIsValidTest.NoState1 (1 ms)
+[ RUN      ] AutomatonIsValidTest.NoState2
+[       OK ] AutomatonIsValidTest.NoState2 (2 ms)
+[ RUN      ] AutomatonIsValidTest.NoSymbol1
+[       OK ] AutomatonIsValidTest.NoSymbol1 (0 ms)
+[ RUN      ] AutomatonIsValidTest.NoSymbol2
+[       OK ] AutomatonIsValidTest.NoSymbol2 (1 ms)
+[ RUN      ] AutomatonIsValidTest.Valid
+[       OK ] AutomatonIsValidTest.Valid (0 ms)
+[----------] 6 tests from AutomatonIsValidTest (12 ms total)
+
+[----------] 5 tests from AutomatonAddSymbolTest
+[ RUN      ] AutomatonAddSymbolTest.OneSymbol
+[       OK ] AutomatonAddSymbolTest.OneSymbol (1 ms)
+[ RUN      ] AutomatonAddSymbolTest.TwoSymbols
+[       OK ] AutomatonAddSymbolTest.TwoSymbols (1 ms)
+[ RUN      ] AutomatonAddSymbolTest.TwoIdenticalSymbols
+/home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/testfa.cc:327: Failure
+Value of: s2
+  Actual: true
+Expected: false
+[  FAILED  ] AutomatonAddSymbolTest.TwoIdenticalSymbols (10 ms)
+[ RUN      ] AutomatonAddSymbolTest.Epsilon
+[       OK ] AutomatonAddSymbolTest.Epsilon (0 ms)
+[ RUN      ] AutomatonAddSymbolTest.IsGraph
+[       OK ] AutomatonAddSymbolTest.IsGraph (2 ms)
+[----------] 5 tests from AutomatonAddSymbolTest (17 ms total)
+
+[----------] 4 tests from AutomatonRemoveSymbolTest
+[ RUN      ] AutomatonRemoveSymbolTest.OneSymbol
+[       OK ] AutomatonRemoveSymbolTest.OneSymbol (1 ms)
+[ RUN      ] AutomatonRemoveSymbolTest.NoSymbol
+[       OK ] AutomatonRemoveSymbolTest.NoSymbol (1 ms)
+[ RUN      ] AutomatonRemoveSymbolTest.UnknownSymbol
+[       OK ] AutomatonRemoveSymbolTest.UnknownSymbol (1 ms)
+[ RUN      ] AutomatonRemoveSymbolTest.SymbolInTransitionGendreau
+[       OK ] AutomatonRemoveSymbolTest.SymbolInTransitionGendreau (2 ms)
+[----------] 4 tests from AutomatonRemoveSymbolTest (6 ms total)
+
+[----------] 6 tests from AutomatonAddStateTest
+[ RUN      ] AutomatonAddStateTest.OneState
+[       OK ] AutomatonAddStateTest.OneState (1 ms)
+[ RUN      ] AutomatonAddStateTest.TwoStates
+[       OK ] AutomatonAddStateTest.TwoStates (1 ms)
+[ RUN      ] AutomatonAddStateTest.TwoIdenticalStates
+[       OK ] AutomatonAddStateTest.TwoIdenticalStates (1 ms)
+[ RUN      ] AutomatonAddStateTest.NegativeStateVillemin
+[       OK ] AutomatonAddStateTest.NegativeStateVillemin (1 ms)
+[ RUN      ] AutomatonAddStateTest.MaxState
+[       OK ] AutomatonAddStateTest.MaxState (1 ms)
+[ RUN      ] AutomatonAddStateTest.KeepState
+[       OK ] AutomatonAddStateTest.KeepState (3 ms)
+[----------] 6 tests from AutomatonAddStateTest (11 ms total)
+
+[----------] 4 tests from AutomatonSetStateInitialTest
+[ RUN      ] AutomatonSetStateInitialTest.OneInitialState
+[       OK ] AutomatonSetStateInitialTest.OneInitialState (1 ms)
+[ RUN      ] AutomatonSetStateInitialTest.TwoInitialStates
+[       OK ] AutomatonSetStateInitialTest.TwoInitialStates (1 ms)
+[ RUN      ] AutomatonSetStateInitialTest.UnknwonState
+testfa: /home/jube/Univ/theorie_des_langages/projet/corr/2022/sandbox/Automaton.cc:125: void fa::Automaton::setStateInitial(int): Assertion `hasState(state)' failed.
+==641927== 
+==641927== Process terminating with default action of signal 6 (SIGABRT): dumping core
+==641927==    at 0x4BF4CE1: raise (raise.c:51)
+==641927==    by 0x4BDE536: abort (abort.c:79)
+==641927==    by 0x4BDE40E: __assert_fail_base.cold (assert.c:92)
+==641927==    by 0x4BED661: __assert_fail (assert.c:101)
+==641927==    by 0x136DB3: fa::Automaton::setStateInitial(int) (Automaton.cc:125)
+==641927==    by 0x13D473: AutomatonSetStateInitialTest_UnknwonState_Test::TestBody() (testfa.cc:573)
+==641927==    by 0x1ACC1E: HandleSehExceptionsInMethodIfSupported<testing::Test, void> (gtest.cc:2631)
+==641927==    by 0x1ACC1E: void testing::internal::HandleExceptionsInMethodIfSupported<testing::Test, void>(testing::Test*, void (testing::Test::*)(), char const*) (gtest.cc:2667)
+==641927==    by 0x1A1375: testing::Test::Run() [clone .part.0] (gtest.cc:2706)
+==641927==    by 0x1A15B1: Run (gtest.cc:2697)
+==641927==    by 0x1A15B1: testing::TestInfo::Run() [clone .part.0] (gtest.cc:2885)
+==641927==    by 0x1A1C59: Run (gtest.cc:2858)
+==641927==    by 0x1A1C59: testing::TestSuite::Run() [clone .part.0] (gtest.cc:3039)
+==641927==    by 0x1A245B: Run (gtest.cc:3018)
+==641927==    by 0x1A245B: testing::internal::UnitTestImpl::RunAllTests() (gtest.cc:5897)
+==641927==    by 0x1AD06E: HandleSehExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool> (gtest.cc:2631)
+==641927==    by 0x1AD06E: bool testing::internal::HandleExceptionsInMethodIfSupported<testing::internal::UnitTestImpl, bool>(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (gtest.cc:2667)
+==641927== 
+==641927== HEAP SUMMARY:
+==641927==     in use at exit: 72,545 bytes in 822 blocks
+==641927==   total heap usage: 3,041 allocs, 2,219 frees, 296,435 bytes allocated
+==641927== 
+==641927== LEAK SUMMARY:
+==641927==    definitely lost: 192 bytes in 24 blocks
+==641927==    indirectly lost: 0 bytes in 0 blocks
+==641927==      possibly lost: 0 bytes in 0 blocks
+==641927==    still reachable: 72,353 bytes in 798 blocks
+==641927==         suppressed: 0 bytes in 0 blocks
+==641927== Rerun with --leak-check=full to see details of leaked memory
+==641927== 
+==641927== For lists of detected and suppressed errors, rerun with: -s
+==641927== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Aborted

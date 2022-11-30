@@ -272,6 +272,11 @@ namespace fa {
      * Unset the state Final
      */
     void unsetStateFinal(int state);
+
+    /**
+     * Recursive function who runs into the automaton to find the last state when we try to go throught the word
+     */
+    std::set<int> findEndWordInState(int state, const std::string& word) const;
   };
 
 }

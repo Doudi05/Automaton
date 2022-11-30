@@ -15,6 +15,9 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   bool Automaton::addSymbol(char symbol) {
+    if (this->alphabets.find(symbol) != this->alphabets.end()) {
+      return false;
+    }
     if (symbol == Epsilon || !isgraph(symbol))
     {
       return false;
@@ -388,23 +391,23 @@ namespace fa {
     {
       return automaton;
     }
-    Automaton automate = automaton;
+    Automaton complete = automaton;
     int puit = 0;
     for (std::size_t i = 0; i <= automaton.countStates(); i++)
     {
       puit = (int)i;
-      if (automate.addState(puit))
+      if (complete.addState(puit))
       {
         break;
       }
     }
     bool isFinal = false;
-    for (auto it = automate.allStates.begin(); it != automate.allStates.end(); it++)
+    for (auto it = complete.allStates.begin(); it != complete.allStates.end(); it++)
     {
-      for (auto it2 = automate.alphabets.begin(); it2 != automate.alphabets.end(); it2++)
+      for (auto it2 = complete.alphabets.begin(); it2 != complete.alphabets.end(); it2++)
       {
         int cpt = 0;
-        for (auto it3 = automate.fleches.begin(); it3 != automate.fleches.end(); it3++)
+        for (auto it3 = complete.fleches.begin(); it3 != complete.fleches.end(); it3++)
         {
           if (it3->dep == it->first && it3->letter == *it2)
           {
@@ -413,11 +416,11 @@ namespace fa {
         }
         std::set<int> visited;
         if(cpt < 1){
-          if(automate.depthFirstSearch(it->first, visited)){
-            automate.addTransition(it->first, *it2, puit);
+          if(complete.depthFirstSearch(it->first, visited)){
+            complete.addTransition(it->first, *it2, puit);
             isFinal = true;
           }else{
-            automate.addTransition(it->first, *it2, it->first);
+            complete.addTransition(it->first, *it2, it->first);
           }
         } 
       }
@@ -425,10 +428,10 @@ namespace fa {
 
     if (!isFinal)
     {
-      automate.removeState(puit);
+      complete.removeState(puit);
     }
 
-    return automate;
+    return complete;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -437,6 +440,7 @@ namespace fa {
     assert(automaton.isValid());
     Automaton complement  = automaton;
 
+    complement = automaton.createDeterministic(automaton);
     complement = automaton.createComplete(automaton);
     
     for (auto it = complement.allStates.begin(); it != complement.allStates.end(); it++)
@@ -458,7 +462,13 @@ namespace fa {
   Automaton Automaton::createMirror(const Automaton& automaton){
     assert(automaton.isValid());
     Automaton mirror;
+
     mirror.alphabets = automaton.alphabets;
+
+    // for (auto it = automaton.alphabets.begin(); it != automaton.alphabets.end(); it++)
+    // {
+    //   mirror.addSymbol(*it);
+    // }
 
     for (auto it = automaton.allStates.begin(); it != automaton.allStates.end(); it++)
     {
@@ -469,7 +479,7 @@ namespace fa {
       }
       if (automaton.isStateFinal(it->first))
       {
-        mirror.isStateInitial(it->first);
+        mirror.setStateInitial(it->first);
       }
     }
     for (auto it = automaton.fleches.begin(); it != automaton.fleches.end(); it++)
@@ -483,7 +493,7 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   bool Automaton::isLanguageEmpty() const{
     assert(isValid());
-    std::set <int> Einitial;
+    std::set<int> Einitial;
     bool has_Efianl = false;
     for (auto it = this->allStates.begin(); it != this->allStates.end(); it++)
     {
@@ -502,7 +512,7 @@ namespace fa {
       return true;
     }
 
-    std::set <int> visited;
+    std::set<int> visited;
     for (auto it = Einitial.begin(); it != Einitial.end(); it++)
     {
       if (this->depthFirstSearch(*it, visited))
@@ -517,7 +527,7 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   void Automaton::removeNonAccessibleStates(){
     assert(isValid());
-    std::set <int> Einitial;
+    std::set<int> Einitial;
     for (auto it = this->allStates.begin(); it != this->allStates.end(); it++)
     {
       if (this->isStateInitial(it->first))
@@ -537,7 +547,7 @@ namespace fa {
       return;
     }
     
-    std::set <int> visited;
+    std::set<int> visited;
     for (auto it = Einitial.begin(); it != Einitial.end(); it++)
     {
       this->depthFirstSearch_NonAccessible(*it, visited);
@@ -573,7 +583,7 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   void Automaton::removeNonCoAccessibleStates(){
     assert(isValid());
-    std::set <int> Efinal;
+    std::set<int> Efinal;
     for (auto it = this->allStates.begin(); it != this->allStates.end(); it++)
     {
       if (this->isStateFinal(it->first))
@@ -593,7 +603,7 @@ namespace fa {
       return;
     }
     
-    std::set <int> visited;
+    std::set<int> visited;
     for (auto it = Efinal.begin(); it != Efinal.end(); it++)
     {
       this->depthFirstSearch_NonCoAccessible(*it, visited);
@@ -668,7 +678,7 @@ namespace fa {
     {
       for (auto it2 = product.alphabets.begin(); it2 != product.alphabets.end(); it2++)
       {
-        std::set <int> Einitial_lhs;
+        std::set<int> Einitial_lhs;
         for (auto it3 = lhs.allStates.begin(); it3 != lhs.allStates.end(); it3++)
         {
           if (lhs.hasTransition(it->first.first, *it2, it3->first))
@@ -677,7 +687,7 @@ namespace fa {
           }
         }
 
-        std::set <int> Einitial_rhs;
+        std::set<int> Einitial_rhs;
         for (auto it3 = rhs.allStates.begin(); it3 != rhs.allStates.end(); it3++)
         {
           if (rhs.hasTransition(it->first.second, *it2, it3->first))
@@ -739,28 +749,150 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// std::set<int> Automaton::readString(const std::string& word) const{
-//   // return nothing
-//   return std::set<int>();
-// }
+  std::set<int> Automaton::readString(const std::string& word) const{
+    assert(isValid());
+    std::set<int> result;
+    std::set<int> Einitial;
+    for (auto it = this->allStates.begin(); it != this->allStates.end(); it++)
+    {
+      if (this->isStateInitial(it->first))
+      {
+        Einitial.insert(it->first);
+      }
+    }
+
+    for (auto it = Einitial.begin(); it != Einitial.end(); it++)
+    {
+      std::set<int> Efinal = this->findEndWordInState(*it, word);
+      std::set<int> visited;
+      std::merge(result.begin(), result.end(), Efinal.begin(), Efinal.end(), std::inserter(visited, visited.begin()));
+      result = visited;
+    }
+    return result;
+  }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bool Automaton::match(const std::string& word) const{
-//   return false;
-// }
+  bool Automaton::match(const std::string& word) const{
+    assert(isValid());
+    std::set<int> result = this->readString(word);
+    for (auto it = result.begin(); it != result.end(); it++)
+    {
+      if (this->isStateFinal(*it))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bool Automaton::isIncludedIn(const Automaton& other) const{
-//   return false;
-// }
+  bool Automaton::isIncludedIn(const Automaton& other) const{
+    assert(isValid());
+    Automaton second = other;
+    for (auto it = this->alphabets.begin(); it != this->alphabets.end(); it++)
+    {
+      if (!second.hasSymbol(*it))
+      {
+        second.addSymbol(*it);
+      }
+    }
+    Automaton complement = createComplement(second);
+    return this->hasEmptyIntersectionWith(complement);
+  }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Automaton Automaton::createDeterministic(const Automaton& other){
-//   return Automaton();
-// }
+  Automaton Automaton::createDeterministic(const Automaton& other){
+    assert(other.isValid());
+    if (other.isDeterministic())
+    {
+      return other;
+    }
+
+    Automaton deterministic;
+    deterministic.alphabets = other.alphabets;
+
+    std::map<int, std::set<int>> EDeterministic;
+    std::set<int> Einitial;
+    int cpt = 0;
+    
+    for (auto it = other.allStates.begin(); it != other.allStates.end(); it++)
+    {
+      if (other.isStateInitial(it->first))
+      {
+        Einitial.insert(it->first);
+      }
+    }
+    EDeterministic.insert({cpt, Einitial});
+    deterministic.addState(cpt);
+    deterministic.setStateInitial(cpt);
+    
+    for (auto it = Einitial.begin(); it != Einitial.end(); it++)
+    {
+      if (other.isStateFinal(*it))
+      {
+        deterministic.setStateFinal(cpt);
+      }
+    }
+    cpt++;
+
+    for (auto it = EDeterministic.begin(); it != EDeterministic.end(); it++)
+    {
+      for (auto it2 = deterministic.alphabets.begin(); it2 != deterministic.alphabets.end(); it2++)
+      {
+        std::set<int> alpha;
+        for (auto it3 = it->second.begin(); it3 != it->second.end(); it3++)
+        {
+          for (auto it4 = other.fleches.begin(); it4 != other.fleches.end(); it4++)
+          {
+            if (it4->dep == *it3 && it4->letter == *it2)
+            {
+              alpha.insert(it4->arr);
+            }
+          }
+        }
+
+        if (Einitial.size() > 0)
+        {
+          bool exist = false;
+          for (auto it3 = EDeterministic.begin(); it3 != EDeterministic.end(); it3++)
+          {
+            if (it3->second == alpha)
+            {
+              exist = true;
+              deterministic.addTransition(it->first, *it2, it3->first);
+            }
+          }
+          if (!exist)
+          {
+            deterministic.addState(cpt);
+            for (auto it3 = alpha.begin(); it3 != alpha.end(); it3++)
+            {
+              if (other.isStateFinal(*it3))
+              {
+                deterministic.setStateFinal(cpt);
+              }
+            }
+            deterministic.addTransition(it->first, *it2, cpt);
+            EDeterministic.insert({cpt, alpha});
+            cpt++;
+          }
+        }
+      }
+    }
+
+    if (!deterministic.isValid())
+    {
+      Automaton empty;
+      deterministic = empty;
+      deterministic.addSymbol('a');
+      deterministic.addState(0);
+      deterministic.setStateInitial(0);
+    }
+    return deterministic;
+  }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -777,7 +909,7 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*FONCTIONS PRIVEES*/
-bool Automaton::depthFirstSearch(int state, std::set<int> &visited) const{
+  bool Automaton::depthFirstSearch(int state, std::set<int> &visited) const{
     if(isStateFinal(state)){
       return true;
     }
@@ -790,15 +922,6 @@ bool Automaton::depthFirstSearch(int state, std::set<int> &visited) const{
       }
     }
     return false;
-  }
-
-  void Automaton::unsetStateFinal(int state){
-    if(hasState(state)){
-      auto it = allStates.find(state);
-      if(it != allStates.end()){
-        it->second.final = false;
-      }
-    }
   }
 
   void Automaton::depthFirstSearch_NonAccessible(int state, std::set<int> &visited) const{
@@ -819,5 +942,35 @@ bool Automaton::depthFirstSearch(int state, std::set<int> &visited) const{
     }
   }
 
+  void Automaton::unsetStateFinal(int state){
+    if(hasState(state)){
+      auto it = allStates.find(state);
+      if(it != allStates.end()){
+        it->second.final = false;
+      }
+    }
+  }
+
+  std::set<int> Automaton::findEndWordInState(int state, const std::string& word) const{
+    std::set<int> endWord;
+    if(word.size() == 0)
+    {
+      endWord.insert(state);
+    }
+    else
+    {
+      for(auto it = fleches.begin(); it != fleches.end(); it++)
+      {
+        if(it->dep == state && it->letter == *word.begin())
+        {
+          std::set<int> endWord2 = findEndWordInState(it->arr, word.substr(1));
+          std::set<int> endWord3;
+          std::merge(endWord.begin(), endWord.end(), endWord2.begin(), endWord2.end(), std::inserter(endWord3, endWord3.begin()));
+          endWord = endWord3;
+        }
+      }
+    }
+    return endWord;
+  }
 }
 

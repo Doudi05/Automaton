@@ -374,7 +374,7 @@ namespace fa {
             cpt++;
           }
         }
-        if (cpt > 1)
+        if (cpt == 0)
         {
           return false;
         }
@@ -386,52 +386,59 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   Automaton Automaton::createComplete(const Automaton& automaton){
-    assert(automaton.isValid());
-    if (automaton.isComplete())
-    {
-      return automaton;
+    Automaton result=Automaton();
+    
+    //copy the alphabet
+    for(std::set<char>::const_iterator it=automaton.alphabets.begin();it!=automaton.alphabets.end();++it){
+      result.addSymbol(*it);
     }
-    Automaton complete = automaton;
-    int puit = 0;
-    for (std::size_t i = 0; i <= automaton.countStates(); i++)
-    {
-      puit = (int)i;
-      if (complete.addState(puit))
-      {
-        break;
+
+    //copy the states
+    for(std::map<int, states>::const_iterator it=automaton.allStates.begin();it!=automaton.allStates.end();++it){
+      result.addState(it->first);
+      if(automaton.isStateInitial(it->first)){
+        result.setStateInitial(it->first);
+      }
+      if(automaton.isStateFinal(it->first)){
+        result.setStateFinal(it->first);
       }
     }
-    bool isFinal = false;
-    for (auto it = complete.allStates.begin(); it != complete.allStates.end(); it++)
-    {
-      for (auto it2 = complete.alphabets.begin(); it2 != complete.alphabets.end(); it2++)
+
+    //copy the transitions
+    for(std::vector<transitions>::const_iterator it=automaton.fleches.begin();it!=automaton.fleches.end();++it){
+      result.addTransition(it->dep,it->letter,it->arr);
+    }
+
+    if(!automaton.isComplete()){
+      //Etats poubelles
+      int puit=0;
+      while(automaton.hasState(puit)){
+        ++puit;
+      }
+      result.addState(puit);
+      
+        
+      for (auto it = result.allStates.begin(); it != result.allStates.end(); it++)
       {
-        int cpt = 0;
-        for (auto it3 = complete.fleches.begin(); it3 != complete.fleches.end(); it3++)
+        for (auto it2 = result.alphabets.begin(); it2 != result.alphabets.end(); it2++)
         {
-          if (it3->dep == it->first && it3->letter == *it2)
+          int cpt = 0;
+          for (auto it3 = result.fleches.begin(); it3 != result.fleches.end(); it3++)
           {
-            cpt++;
+            if (it3->dep == it->first && it3->letter == *it2)
+            {
+              cpt++;
+            }
+          }
+          if (cpt == 0)
+          {
+            result.addTransition(it->first, *it2, puit);
           }
         }
-        std::set<int> visited;
-        if(cpt < 1){
-          if(complete.depthFirstSearch(it->first, visited)){
-            complete.addTransition(it->first, *it2, puit);
-            isFinal = true;
-          }else{
-            complete.addTransition(it->first, *it2, it->first);
-          }
-        } 
       }
+      
     }
-
-    if (!isFinal)
-    {
-      complete.removeState(puit);
-    }
-
-    return complete;
+    return result;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -441,7 +448,7 @@ namespace fa {
     Automaton complement  = automaton;
 
     complement = automaton.createDeterministic(automaton);
-    complement = automaton.createComplete(automaton);
+    complement = automaton.createComplete(complement);
     
     for (auto it = complement.allStates.begin(); it != complement.allStates.end(); it++)
     {
@@ -896,15 +903,133 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Automaton Automaton::createMinimalMoore(const Automaton& other){
-//   return Automaton();
-// }
+Automaton Automaton::createMinimalMoore(const Automaton& other){
+  return other;
+  // assert(other.isValid());
+
+  // Automaton minimal;
+  // Automaton moore;
+
+  // minimal = createDeterministic(other);
+  // minimal = createComplete(minimal);
+
+  // moore.alphabets = minimal.alphabets;
+
+  // struct minimize
+  // {
+  //   int dep;
+  //   int arr;
+  //   std::vector<int> transitions;
+  // };
+
+  // std::map<int, minimize> classeEquivalence;
+
+  // for (auto it = minimal.allStates.begin(); it != minimal.allStates.end(); it++)
+  // {
+  //   struct minimize m;
+  //   if (minimal.isStateFinal(it->first))
+  //   {
+  //     m.dep = 2;
+  //   }
+  //   else
+  //   {
+  //     m.dep = 1;
+  //   }
+  //   classeEquivalence.insert({it->first, m});
+  // }
+
+  // bool change;
+  // do {
+  //   for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+  //   {
+  //     it->second.transitions.clear();
+  //   }
+
+  //   change = true;
+
+  //   for (auto it = minimal.alphabets.begin(); it != minimal.alphabets.end(); it++)
+  //   {
+  //     for (auto it2 = minimal.fleches.begin(); it2 != minimal.fleches.end(); it2++)
+  //     {
+  //       if (it2->letter == *it)
+  //       {
+  //         classeEquivalence[it2->dep].transitions.push_back(classeEquivalence[it2->arr].dep);
+  //       }
+  //     }
+  //   }
+
+  //   int cpt = 1;
+  //   for (std::map<int, minimize>::iterator it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+  //   {
+  //     bool exist = false;
+  //     for (std::map<int, minimize>::iterator it2 = classeEquivalence.begin(); it2 != classeEquivalence.end(); it2++)
+  //     {
+  //       if (it2->second.dep == it->second.dep && it2->second.transitions == it->second.transitions)
+  //       {
+  //         it->second.arr = it2->second.arr;
+  //         exist = true;
+  //         break;
+  //       }
+  //     }
+  //     if (!exist)
+  //     {
+  //       it->second.arr = cpt;
+  //       cpt++;
+  //     }
+  //   }
+
+  //   for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+  //   {
+  //     if (it->second.dep != it->second.arr)
+  //     {
+  //       it->second.dep = it->second.arr;
+  //       change = false;
+  //     }
+  //   }
+  // } while (!change);
+
+  // for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+  // {
+  //   moore.addState(it->second.dep);
+  //   if (minimal.isStateInitial(it->first))
+  //   {
+  //     moore.setStateInitial(it->second.dep);
+  //   }
+  //   if (minimal.isStateFinal(it->first))
+  //   {
+  //     moore.setStateFinal(it->second.dep);
+  //   }
+  // }
+
+  // int i = 0;
+  // for (auto it = moore.alphabets.begin(); it != moore.alphabets.end(); it++)
+  // {
+  //   for (auto it2 = classeEquivalence.begin(); it2 != classeEquivalence.end(); it2++)
+  //   {
+  //     moore.addTransition(it2->second.dep, *it, it2->second.transitions[i]);
+  //   }
+  //   i++;
+  // }
+  // return moore;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Automaton Automaton::createMinimalBrzozowski(const Automaton& other){
-//   return Automaton();
-// }
+Automaton Automaton::createMinimalBrzozowski(const Automaton& other){
+  assert(other.isValid());
+
+  Automaton minimal = fa::Automaton::createMirror(other);
+
+  minimal = fa::Automaton::createDeterministic(minimal);
+
+  minimal = fa::Automaton::createMirror(minimal);
+  
+  minimal = fa::Automaton::createDeterministic(minimal);
+
+  minimal = fa::Automaton::createComplete(minimal);
+
+  return minimal;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

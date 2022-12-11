@@ -274,9 +274,10 @@ namespace fa {
     void unsetStateFinal(int state);
 
     /**
-     * Recursive function who runs into the automaton to find the last state when we try to go throught the word
+     * finding any transitions that match the input letter and start from a state in the input set. 
+     * The matching transitions are added to the result set and returned.
      */
-    std::set<int> findEndWordInState(int state, const std::string& word) const;
+    std::set<int> readSymbol(const std::set<int> data, const char letter) const;
   };
 
 }

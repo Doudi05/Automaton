@@ -45,6 +45,17 @@ namespace fa {
   bool Automaton::removeSymbol(char symbol) {
     if (hasSymbol(symbol))
     {
+      for (auto it = this->fleches.begin(); it != this->fleches.end();)
+      {
+        if (it->letter == symbol)
+        {
+          it = this->fleches.erase(it);
+        }
+        else
+        {
+          ++it;
+        }
+      }
       this->alphabets.erase(symbol);
       return true;
     }
@@ -68,23 +79,6 @@ namespace fa {
     std::pair<std::map<int, states>::iterator, bool> ret;
     ret = this->allStates.insert(std::pair<int, states>(state, newState));
     return ret.second;
-
-    // if (state < 0)
-    // {
-    //   return false;
-    // }
-
-    // if (this->allStates.find(state) == this->allStates.end())
-    // {
-    //   struct states *newState = new struct states;
-    //   newState->initial = 0;
-    //   newState->final = 0;
-    //   newState->both = 0;
-    //   this->allStates.insert(pair<int, struct states *>(state, newState));
-    //   return true;
-    // }
-
-    // return false;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,8 +98,6 @@ namespace fa {
         }
       }
       this->allStates.erase(state);
-      // this->initialState.erase(state);
-      // this->finalState.erase(state);
       return true;
     }
     return false;
@@ -142,11 +134,6 @@ namespace fa {
         it->second.initial = true;
       }
     }
-
-    // assert(hasState(state));
-    // allStates[state]->initial = 1;
-    // initialState[state] = allStates[state];
-      
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,9 +148,6 @@ namespace fa {
       }
     }
     return false;
-
-    // assert(hasState(state));
-    // return allStates.at(state)->initial;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,10 +161,6 @@ namespace fa {
         it->second.final = true;
       }
     }
-
-    // assert(hasState(state));
-    // allStates[state]->final = 1;
-    // finalState[state] = allStates[state];
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,9 +175,6 @@ namespace fa {
       }
     }
     return false;
-
-    // assert(hasState(state));
-    // return allStates.at(state)->final;
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -333,7 +310,7 @@ namespace fa {
         cpt++;
       }
     }
-    if (cpt > 1)
+    if (cpt != 1)
     {
       return false;
     }
@@ -341,15 +318,15 @@ namespace fa {
     {
       for (auto it2 = this->alphabets.begin(); it2 != this->alphabets.end(); it2++)
       {
-        cpt = 0;
+        int count = 0;
         for (auto it3 = this->fleches.begin(); it3 != this->fleches.end(); it3++)
         {
           if (it3->dep == it->first && it3->letter == *it2)
           {
-            cpt++;
+            count++;
           }
         }
-        if (cpt > 1)
+        if (count > 1)
         {
           return false;
         }
@@ -388,12 +365,10 @@ namespace fa {
   Automaton Automaton::createComplete(const Automaton& automaton){
     Automaton result=Automaton();
     
-    //copy the alphabet
     for(std::set<char>::const_iterator it=automaton.alphabets.begin();it!=automaton.alphabets.end();++it){
       result.addSymbol(*it);
     }
 
-    //copy the states
     for(std::map<int, states>::const_iterator it=automaton.allStates.begin();it!=automaton.allStates.end();++it){
       result.addState(it->first);
       if(automaton.isStateInitial(it->first)){
@@ -404,13 +379,11 @@ namespace fa {
       }
     }
 
-    //copy the transitions
     for(std::vector<transitions>::const_iterator it=automaton.fleches.begin();it!=automaton.fleches.end();++it){
       result.addTransition(it->dep,it->letter,it->arr);
     }
 
     if(!automaton.isComplete()){
-      //Etats poubelles
       int puit=0;
       while(automaton.hasState(puit)){
         ++puit;
@@ -445,7 +418,7 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   Automaton Automaton::createComplement(const Automaton& automaton){
     assert(automaton.isValid());
-    Automaton complement  = automaton;
+    Automaton complement = automaton;
 
     complement = automaton.createDeterministic(automaton);
     complement = automaton.createComplete(complement);
@@ -471,11 +444,6 @@ namespace fa {
     Automaton mirror;
 
     mirror.alphabets = automaton.alphabets;
-
-    // for (auto it = automaton.alphabets.begin(); it != automaton.alphabets.end(); it++)
-    // {
-    //   mirror.addSymbol(*it);
-    // }
 
     for (auto it = automaton.allStates.begin(); it != automaton.allStates.end(); it++)
     {
@@ -759,21 +727,22 @@ namespace fa {
   std::set<int> Automaton::readString(const std::string& word) const{
     assert(isValid());
     std::set<int> result;
-    std::set<int> Einitial;
+
     for (auto it = this->allStates.begin(); it != this->allStates.end(); it++)
     {
       if (this->isStateInitial(it->first))
       {
-        Einitial.insert(it->first);
+        result.insert(it->first);
       }
     }
 
-    for (auto it = Einitial.begin(); it != Einitial.end(); it++)
+    for (auto it = word.begin(); it != word.end(); it++)
     {
-      std::set<int> Efinal = this->findEndWordInState(*it, word);
-      std::set<int> visited;
-      std::merge(result.begin(), result.end(), Efinal.begin(), Efinal.end(), std::inserter(visited, visited.begin()));
-      result = visited;
+      result = this->readSymbol(result, *it);
+      if (result.empty())
+      {
+        return result;
+      }
     }
     return result;
   }
@@ -904,113 +873,112 @@ namespace fa {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 Automaton Automaton::createMinimalMoore(const Automaton& other){
-  return other;
-  // assert(other.isValid());
+  assert(other.isValid());
 
-  // Automaton minimal;
-  // Automaton moore;
+  Automaton minimal;
+  Automaton moore;
 
-  // minimal = createDeterministic(other);
-  // minimal = createComplete(minimal);
+  minimal = createDeterministic(other);
+  minimal = createComplete(minimal);
 
-  // moore.alphabets = minimal.alphabets;
+  moore.alphabets = minimal.alphabets;
 
-  // struct minimize
-  // {
-  //   int dep;
-  //   int arr;
-  //   std::vector<int> transitions;
-  // };
+  struct minimize
+  {
+    int depart;
+    int arrive;
+    std::vector<int> arrows;
+  };
 
-  // std::map<int, minimize> classeEquivalence;
+  std::map<int, minimize> classeEquivalence;
 
-  // for (auto it = minimal.allStates.begin(); it != minimal.allStates.end(); it++)
-  // {
-  //   struct minimize m;
-  //   if (minimal.isStateFinal(it->first))
-  //   {
-  //     m.dep = 2;
-  //   }
-  //   else
-  //   {
-  //     m.dep = 1;
-  //   }
-  //   classeEquivalence.insert({it->first, m});
-  // }
+  for (auto it = minimal.allStates.begin(); it != minimal.allStates.end(); it++)
+  {
+    struct minimize m;
+    if (minimal.isStateFinal(it->first))
+    {
+      m.depart = 2;
+    }
+    else
+    {
+      m.depart = 1;
+    }
+    classeEquivalence.insert({it->first, m});
+  }
 
-  // bool change;
-  // do {
-  //   for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
-  //   {
-  //     it->second.transitions.clear();
-  //   }
+  bool change;
+  do {
+    for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+    {
+      it->second.arrows.clear();
+    }
 
-  //   change = true;
+    change = true;
 
-  //   for (auto it = minimal.alphabets.begin(); it != minimal.alphabets.end(); it++)
-  //   {
-  //     for (auto it2 = minimal.fleches.begin(); it2 != minimal.fleches.end(); it2++)
-  //     {
-  //       if (it2->letter == *it)
-  //       {
-  //         classeEquivalence[it2->dep].transitions.push_back(classeEquivalence[it2->arr].dep);
-  //       }
-  //     }
-  //   }
+    for (auto it = minimal.alphabets.begin(); it != minimal.alphabets.end(); it++)
+    {
+      for (auto it2 = minimal.fleches.begin(); it2 != minimal.fleches.end(); it2++)
+      {
+        if (it2->letter == *it)
+        {
+          classeEquivalence[it2->dep].arrows.push_back(classeEquivalence[it2->arr].depart);
+        }
+      }
+    }
 
-  //   int cpt = 1;
-  //   for (std::map<int, minimize>::iterator it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
-  //   {
-  //     bool exist = false;
-  //     for (std::map<int, minimize>::iterator it2 = classeEquivalence.begin(); it2 != classeEquivalence.end(); it2++)
-  //     {
-  //       if (it2->second.dep == it->second.dep && it2->second.transitions == it->second.transitions)
-  //       {
-  //         it->second.arr = it2->second.arr;
-  //         exist = true;
-  //         break;
-  //       }
-  //     }
-  //     if (!exist)
-  //     {
-  //       it->second.arr = cpt;
-  //       cpt++;
-  //     }
-  //   }
+    int cpt = 1;
+    for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+    {
+      bool exist = false;
+      for (auto it2 = classeEquivalence.begin(); it2 != classeEquivalence.end(); it2++)
+      {
+        if (it2->second.depart == it->second.depart && it2->second.arrows == it->second.arrows)
+        {
+          it->second.arrive = it2->second.arrive;
+          exist = true;
+          break;
+        }
+      }
+      if (!exist)
+      {
+        it->second.arrive = cpt;
+        cpt++;
+      }
+    }
 
-  //   for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
-  //   {
-  //     if (it->second.dep != it->second.arr)
-  //     {
-  //       it->second.dep = it->second.arr;
-  //       change = false;
-  //     }
-  //   }
-  // } while (!change);
+    for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+    {
+      if (it->second.depart != it->second.arrive)
+      {
+        it->second.depart = it->second.arrive;
+        change = false;
+      }
+    }
+  } while (!change);
 
-  // for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
-  // {
-  //   moore.addState(it->second.dep);
-  //   if (minimal.isStateInitial(it->first))
-  //   {
-  //     moore.setStateInitial(it->second.dep);
-  //   }
-  //   if (minimal.isStateFinal(it->first))
-  //   {
-  //     moore.setStateFinal(it->second.dep);
-  //   }
-  // }
+  for (auto it = classeEquivalence.begin(); it != classeEquivalence.end(); it++)
+  {
+    moore.addState(it->second.depart);
+    if (minimal.isStateInitial(it->first))
+    {
+      moore.setStateInitial(it->second.depart);
+    }
+    if (minimal.isStateFinal(it->first))
+    {
+      moore.setStateFinal(it->second.depart);
+    }
+  }
 
-  // int i = 0;
-  // for (auto it = moore.alphabets.begin(); it != moore.alphabets.end(); it++)
-  // {
-  //   for (auto it2 = classeEquivalence.begin(); it2 != classeEquivalence.end(); it2++)
-  //   {
-  //     moore.addTransition(it2->second.dep, *it, it2->second.transitions[i]);
-  //   }
-  //   i++;
-  // }
-  // return moore;
+  int i = 0;
+  for (auto it = moore.alphabets.begin(); it != moore.alphabets.end(); it++)
+  {
+    for (auto it2 = classeEquivalence.begin(); it2 != classeEquivalence.end(); it2++)
+    {
+      moore.addTransition(it2->second.depart, *it, it2->second.arrows[i]);
+    }
+    i++;
+  }
+  return moore;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1033,6 +1001,7 @@ Automaton Automaton::createMinimalBrzozowski(const Automaton& other){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*FONCTIONS PRIVEES*/
   bool Automaton::depthFirstSearch(int state, std::set<int> &visited) const{
     if(isStateFinal(state)){
@@ -1076,26 +1045,15 @@ Automaton Automaton::createMinimalBrzozowski(const Automaton& other){
     }
   }
 
-  std::set<int> Automaton::findEndWordInState(int state, const std::string& word) const{
-    std::set<int> endWord;
-    if(word.size() == 0)
-    {
-      endWord.insert(state);
-    }
-    else
-    {
-      for(auto it = fleches.begin(); it != fleches.end(); it++)
-      {
-        if(it->dep == state && it->letter == *word.begin())
-        {
-          std::set<int> endWord2 = findEndWordInState(it->arr, word.substr(1));
-          std::set<int> endWord3;
-          std::merge(endWord.begin(), endWord.end(), endWord2.begin(), endWord2.end(), std::inserter(endWord3, endWord3.begin()));
-          endWord = endWord3;
+  std::set<int> Automaton::readSymbol(const std::set<int> data, const char letter) const{
+    std::set<int> result;
+    for (auto it = data .begin(); it != data .end(); it++){
+      for (auto it2 = fleches.begin(); it2 != fleches.end(); it2++){
+        if(it2->dep == *it && it2->letter == letter){
+          result.insert(it2->arr);
         }
       }
     }
-    return endWord;
+    return result;
   }
 }
-
